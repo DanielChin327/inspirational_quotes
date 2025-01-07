@@ -1,23 +1,12 @@
-// Fetch a random quote from an external API
-// function fetchQuote() {
-//   fetch('https://api.quotable.io/random')  // Using a free quote API for testing
-//       .then(response => response.json())
-//       .then(data => {
-//           document.getElementById('quote-text').innerText = `"${data.content}" - ${data.author}`;
-//       })
-//       .catch(error => {
-//           console.error('Error fetching quote:', error);
-//       });
-// }
-
+// Fetch a quote from your Flask backend instead of the external API directly
 function fetchQuote() {
-fetch("https://type.fit/api/quotes")
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function(data) {
-    console.log(data);
-  });
+  fetch("http://127.0.0.1:5000/api/quote")
+      .then(response => response.json())
+      .then(data => {
+          // Assuming the data structure returned matches your API response
+          document.getElementById('quote-text').innerText = `"${data[0].q}" - ${data[0].a}`;
+      })
+      .catch(error => console.error('Error fetching quote:', error));
 }
 
 // Load a quote when the page loads

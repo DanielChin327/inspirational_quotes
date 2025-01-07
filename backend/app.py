@@ -1,8 +1,14 @@
 # Backend/app.py
 from flask import Flask, jsonify
+from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
+CORS(app)
+
+@app.route('/')
+def test():
+    return "Routes are working"
 
 @app.route('/api/quote')
 def get_quote():
