@@ -1,24 +1,30 @@
 # Backend/app.py
-from flask import Flask, jsonify
+from flask import Flask
+from config.db import db
+from routes.auth_routes import auth_routes
+from routes.quote_routes import quote_routes
+from flask_jwt_extended import JWTManager
 from flask_cors import CORS
-import requests
 
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/')
-def test():
-    return "Routes are working"
+# Database Setup
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost/inspirational_quotes'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JWT_SECRET_KEY'] = 'supersecretkey'  
 
-@app.route('/api/quote')
-def get_quote():
-    """Fetch a random quote from ZenQuotes and return it."""
-    try:
-        response = requests.get("https://zenquotes.io/api/random")
-        response.raise_for_status()
-        return jsonify(response.json())
-    except requests.RequestException as e:
-        return jsonify({"error": "Failed to fetch quote", "details": str(e)}), 500
+# Initialize Extensions
+db.init_app(app)
+JWTManager(app)
+
+# Register Routes
+app.register_blueprint(auth_routes, url_prefix='/api/auth')
+app.register_blueprint(quote_routes, url_prefix='/api')
+
+# Create Tables
+with app.app_context():
+    db.create_all()
 
 if __name__ == "__main__":
     app.run(debug=True)
