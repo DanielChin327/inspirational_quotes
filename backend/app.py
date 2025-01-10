@@ -10,13 +10,19 @@ app = Flask(__name__)
 CORS(app)
 
 # Database Setup
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost/inspirational_quotes'
+# Ensure correct credentials for XAMPP MariaDB
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root@localhost/inspirational_quotes'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'supersecretkey'  
 
 # Initialize Extensions
 db.init_app(app)
 JWTManager(app)
+
+# ✅ Add a debug route at the root
+@app.route("/")
+def home():
+    return "Flask is working!"
 
 # Register Routes
 app.register_blueprint(auth_routes, url_prefix='/api/auth')
