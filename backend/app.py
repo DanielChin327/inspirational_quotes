@@ -4,6 +4,7 @@ from config.db import db
 from routes.auth_routes import auth_routes
 from routes.quote_routes import quote_routes
 from flask_jwt_extended import JWTManager
+from config import Config, register_models, register_routes
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -13,13 +14,13 @@ CORS(app)
 # Ensure correct credentials for XAMPP MariaDB
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root@localhost/inspirational_quotes'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'supersecretkey'  
+app.config['JWT_SECRET_KEY'] = 'supersecretkey'
 
 # Initialize Extensions
 db.init_app(app)
 JWTManager(app)
 
-# ✅ Add a debug route at the root
+
 @app.route("/")
 def home():
     return "Flask is working!"
